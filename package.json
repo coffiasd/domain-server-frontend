@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@lukso/lsp-smart-contracts": "file:../lsp-smart-contracts"
+  }
+}
