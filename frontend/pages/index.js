@@ -14,7 +14,10 @@ export default function Home() {
   const connectWallet = async (event) => {
     if (window.ethereum) {
 
-      const SAMPLE_PROFILE_ADDRESS = '0x311611C9A46a192C14Ea993159a0498EDE5578aC';
+      const web3 = new Web3(window.ethereum);
+      const accounts = await web3.eth.requestAccounts();
+      const UPAddress = "0x4977DDDF91bfd79534321DA43036bbbE1B2d934c";
+
       const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
       const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
@@ -24,15 +27,19 @@ export default function Home() {
       async function fetchProfile(address) {
         try {
           const profile = new ERC725(erc725schema, address, provider, config);
-          return await profile.fetchData();
+          return await profile.fetchData('LSP3Profile');
         } catch (error) {
           return console.log('This is not an ERC725 Contract');
         }
       }
 
-      fetchProfile(SAMPLE_PROFILE_ADDRESS).then((profileData) =>
+      fetchProfile(UPAddress).then((profileData) =>
         console.log(JSON.stringify(profileData, undefined, 2)),
       );
+
+      const erc725 = new ERC725(erc725schema, UPAddress, provider, config);
+      const add = await erc725.getOwner();
+      console.log(add);
 
 
     } else {

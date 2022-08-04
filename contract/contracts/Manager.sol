@@ -6,4 +6,11 @@ import "@lukso/lsp-smart-contracts/contracts/LSP11BasicSocialRecovery/LSP11Basic
 
 contract Manager is LSP6KeyManager, LSP11BasicSocialRecovery {
     constructor(address _target) LSP6KeyManager(_target) {}
+
+    /**
+     * @inheritdoc LSP11BasicSocialRecovery add an news address to the guardians list
+     */
+    function MyaddGuardian(address newGuardian) public {
+        addGuardian(newGuardian);
+    }
 }
