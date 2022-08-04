@@ -1,9 +1,45 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.css';
+import Web3 from 'web3';
+import { LSPFactory } from '@lukso/lsp-factory.js';
+import { ERC725 } from '@erc725/erc725.js';
+import 'isomorphic-fetch';
+import erc725schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
+
 
 export default function Home() {
+
+
+  const connectWallet = async (event) => {
+    if (window.ethereum) {
+
+      const SAMPLE_PROFILE_ADDRESS = '0x311611C9A46a192C14Ea993159a0498EDE5578aC';
+      const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
+      const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
+
+      const provider = new Web3.providers.HttpProvider(RPC_ENDPOINT);
+      const config = { ipfsGateway: IPFS_GATEWAY };
+
+      async function fetchProfile(address) {
+        try {
+          const profile = new ERC725(erc725schema, address, provider, config);
+          return await profile.fetchData();
+        } catch (error) {
+          return console.log('This is not an ERC725 Contract');
+        }
+      }
+
+      fetchProfile(SAMPLE_PROFILE_ADDRESS).then((profileData) =>
+        console.log(JSON.stringify(profileData, undefined, 2)),
+      );
+
+
+    } else {
+      alert("Please install MetaMask");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,9 +54,8 @@ export default function Home() {
         </h3>
 
         <div className={styles.grid}>
-          <button type="button" className="btn btn-secondary">Connect Lukso Wallet</button>
+          <button onClick={connectWallet} type="button" className="btn btn-secondary">Connect Lukso Wallet</button>
         </div>
-
 
       </main>
 
