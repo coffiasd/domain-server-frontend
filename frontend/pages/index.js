@@ -1,22 +1,25 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.css';
+import React from 'react';
+import { Button, Card, CardBody, CardTitle, Form, FormGroup, Input, List } from 'reactstrap';
 import Web3 from 'web3';
 import { LSPFactory } from '@lukso/lsp-factory.js';
 import { ERC725 } from '@erc725/erc725.js';
 import 'isomorphic-fetch';
 import erc725schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 
+export default function Home(data) {
 
-export default function Home() {
-
+  const [buttonValue, setbuttonValue] = React.useState("Connect Lukso Wallet")
+  const [buttonClass, setbuttonClass] = React.useState("spinner-border spinner-border-sm visually-hidden")
+  const [login, SetLogin] = React.useState(false);
 
   const connectWallet = async (event) => {
     if (window.ethereum) {
-
       const web3 = new Web3(window.ethereum);
       const accounts = await web3.eth.requestAccounts();
-      const UPAddress = "0x4977DDDF91bfd79534321DA43036bbbE1B2d934c";
+      const UPAddress = accounts[0];
 
       const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
       const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
@@ -25,22 +28,26 @@ export default function Home() {
       const config = { ipfsGateway: IPFS_GATEWAY };
 
       async function fetchProfile(address) {
+        setbuttonValue("Loading...");
+        setbuttonClass("spinner-border spinner-border-sm");
         try {
           const profile = new ERC725(erc725schema, address, provider, config);
-          return await profile.fetchData('LSP3Profile');
+          return await profile.fetchData();
         } catch (error) {
           return console.log('This is not an ERC725 Contract');
         }
       }
 
-      fetchProfile(UPAddress).then((profileData) =>
-        console.log(JSON.stringify(profileData, undefined, 2)),
+      fetchProfile(UPAddress).then(
+        function (profileData) {
+          console.log(JSON.stringify(profileData, undefined, 2));
+          SetLogin(true);
+        }
       );
 
       const erc725 = new ERC725(erc725schema, UPAddress, provider, config);
       const add = await erc725.getOwner();
       console.log(add);
-
 
     } else {
       alert("Please install MetaMask");
@@ -61,14 +68,85 @@ export default function Home() {
         </h3>
 
         <div className={styles.grid}>
-          <button onClick={connectWallet} type="button" className="btn btn-secondary">Connect Lukso Wallet</button>
+
+          {login ? "" : <button onClick={connectWallet} type="button" className="btn btn-secondary">{buttonValue}
+            <span className={buttonClass} role="status" aria-hidden="false"></span>
+          </button>}
+
+
+          {login ? <Card
+            style={{
+              width: '20rem',
+            }}
+          >
+            <img
+              title='profile image'
+              className={styles.profileImage}
+              alt="Card"
+              src="https://picsum.photos/300/200"
+            />
+            <span className={styles.imgSpan}>ayden lee</span>
+
+            <img
+              className={styles.imageStyle}
+              alt="Card"
+              src="https://picsum.photos/300/200"
+            />
+            <CardBody>
+              <CardTitle>
+                User name:Ayden lee
+              </CardTitle>
+
+              <Form>
+                <FormGroup>
+                  <Input
+                    id="examplePassword"
+                    name="password"
+                    placeholder="input guardians address"
+                    type="text"
+                  />
+                </FormGroup>
+                <Button>
+                  Add guardians
+                </Button>
+                <hr class="hr" />
+                <List type="unstyled">
+                  <li>
+                    Guardians list
+                    <ul>
+                      <li>
+                        Phasellus iaculis neque
+                      </li>
+                      <li>
+                        Purus sodales ultricies
+                      </li>
+                    </ul>
+                  </li>
+                </List>
+              </Form>
+            </CardBody>
+          </Card> : ""}
+
+
+
+
         </div>
 
-      </main>
+      </main >
 
       <footer className={styles.footer}>
         Powered By Ayden lee
       </footer>
     </div >
   )
+}
+
+export async function getStaticProps() {
+  const data = {
+    "buttonValue": "Connect Wallet"
+  }
+
+  return {
+    props: data
+  }
 }
