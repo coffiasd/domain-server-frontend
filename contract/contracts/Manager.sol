@@ -2,15 +2,22 @@
 pragma solidity ^0.8.0;
 
 import "@lukso/lsp-smart-contracts/contracts/LSP6KeyManager/LSP6KeyManager.sol";
-import "@lukso/lsp-smart-contracts/contracts/LSP11BasicSocialRecovery/LSP11BasicSocialRecovery.sol";
 
-contract Manager is LSP6KeyManager, LSP11BasicSocialRecovery {
-    constructor(address _target) LSP6KeyManager(_target) {}
+// import "@lukso/lsp-smart-contracts/contracts/LSP11BasicSocialRecovery/LSP11BasicSocialRecovery.sol";
 
-    /**
-     * @inheritdoc LSP11BasicSocialRecovery add an news address to the guardians list
-     */
-    function MyaddGuardian(address newGuardian) public {
-        addGuardian(newGuardian);
+contract Manager is LSP6KeyManager {
+    constructor(address _target) public LSP6KeyManager(_target) {}
+
+    // function supportsInterface(bytes4 interfaceId)
+    //     public
+    //     view
+    //     virtual
+    //     override(LSP6KeyManager, LSP11BasicSocialRecovery)
+    //     returns (bool)
+    // {
+    //     return super.supportsInterface(interfaceId);
+    // }
+    receive() external payable {
+        revert("bad call");
     }
 }

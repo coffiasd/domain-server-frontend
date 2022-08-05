@@ -8,14 +8,14 @@ const hre = require("hardhat");
 
 async function main() {
     //deploy account contract
-    const [owner, otherAccount] = await ethers.getSigners();
-    const Account = await hre.ethers.getContractFactory("Account");
-    const account = await Account.deploy(owner.address);
-    await account.deployed();
-    console.log("deployed to:", account.address);
-    const res = await account.owner();
-    console.log("check owner address:", owner.address, " | ", res);
-    console.log("start transfer owner address");
+    // const [owner, otherAccount] = await ethers.getSigners();
+    // const Account = await hre.ethers.getContractFactory("Account");
+    // const account = await Account.deploy(owner.address);
+    // await account.deployed();
+    // console.log("deployed to:", account.address);
+    // const res = await account.owner();
+    // console.log("check owner address:", owner.address, " | ", res);
+    // console.log("start transfer owner address");
     // await account.transferOwnership(otherAccount.address);
     // const pending = await account.pendingOwner();
     // console.log("check pending owner address:", pending);
@@ -25,10 +25,10 @@ async function main() {
 
     //deploy manager contract
     const Manager = await hre.ethers.getContractFactory("Manager");
-    console.log("deployed to:", account.address);
-    const manager = await Manager.deploy(account.address);
+    const manager = await Manager.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
     const target = await manager.target();
     console.log("target get target address:", target);
+    console.log("lsp manager address:", manager.address);
 
 }
 
