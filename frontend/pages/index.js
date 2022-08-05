@@ -14,6 +14,7 @@ export default function Home(data) {
   const [buttonValue, setbuttonValue] = React.useState("Connect Lukso Wallet")
   const [buttonClass, setbuttonClass] = React.useState("spinner-border spinner-border-sm visually-hidden")
   const [login, SetLogin] = React.useState(false);
+  const [user, setUser] = React.useState({ name: "" });
 
   const connectWallet = async (event) => {
     if (window.ethereum) {
@@ -40,14 +41,15 @@ export default function Home(data) {
 
       fetchProfile(UPAddress).then(
         function (profileData) {
-          console.log(JSON.stringify(profileData, undefined, 2));
+          console.log(profileData[1]);
+          user.name = profileData[1].value.LSP3Profile.name;
+          setUser(user);
           SetLogin(true);
         }
       );
 
-      const erc725 = new ERC725(erc725schema, UPAddress, provider, config);
-      const add = await erc725.getOwner();
-      console.log(add);
+      // const erc725 = new ERC725(erc725schema, UPAddress, provider, config);
+
 
     } else {
       alert("Please install MetaMask");
@@ -85,7 +87,7 @@ export default function Home(data) {
               alt="Card"
               src="https://picsum.photos/300/200"
             />
-            <span className={styles.imgSpan}>ayden lee</span>
+            <span className={styles.imgSpan}>{user.name}</span>
 
             <img
               className={styles.imageStyle}
@@ -93,10 +95,6 @@ export default function Home(data) {
               src="https://picsum.photos/300/200"
             />
             <CardBody>
-              <CardTitle>
-                User name:Ayden lee
-              </CardTitle>
-
               <Form>
                 <FormGroup>
                   <Input
@@ -109,7 +107,7 @@ export default function Home(data) {
                 <Button>
                   Add guardians
                 </Button>
-                <hr class="hr" />
+                <hr className="hr" />
                 <List type="unstyled">
                   <li>
                     Guardians list
