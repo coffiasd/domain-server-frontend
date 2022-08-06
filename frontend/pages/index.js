@@ -10,20 +10,19 @@ import 'isomorphic-fetch';
 import erc725schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 
 export default function Home(data) {
-
+  var controllerAddress = ""
   const [buttonValue, setbuttonValue] = React.useState("Connect Lukso Wallet")
   const [buttonClass, setbuttonClass] = React.useState("spinner-border spinner-border-sm visually-hidden")
   const [login, SetLogin] = React.useState(false);
   const [user, setUser] = React.useState({ name: "" });
+  const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
+  const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
   const connectWallet = async (event) => {
     if (window.ethereum) {
       const web3 = new Web3(window.ethereum);
       const accounts = await web3.eth.requestAccounts();
       const UPAddress = accounts[0];
-
-      const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
-      const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
       const provider = new Web3.providers.HttpProvider(RPC_ENDPOINT);
       const config = { ipfsGateway: IPFS_GATEWAY };
@@ -55,6 +54,24 @@ export default function Home(data) {
       alert("Please install MetaMask");
     }
   };
+
+  const addController = async (event) => {
+    if (controllerAddress == "") {
+      alert("Please enter a controller address");
+      return;
+    }
+    await ethereum.request({ method: 'eth_requestAccounts', params: [] });
+    const lspFactory = new LSPFactory(ethereum, {
+      chainId: 2828,
+    });
+
+    const manager = await lspFactory.UniversalProfile.deploy({
+      controllerAddresses: [
+        controllerAddress,
+      ],
+    });
+    console.log(manager);
+  }
 
   return (
     <div className={styles.container}>
@@ -99,12 +116,13 @@ export default function Home(data) {
                 <FormGroup>
                   <Input
                     id="examplePassword"
-                    name="password"
+                    name="address"
                     placeholder="input guardians address"
                     type="text"
+                    value={controllerAddress}
                   />
                 </FormGroup>
-                <Button>
+                <Button onClick={addController}>
                   Add guardians
                 </Button>
                 <hr className="hr" />
