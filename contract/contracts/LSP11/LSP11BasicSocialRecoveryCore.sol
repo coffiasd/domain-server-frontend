@@ -6,17 +6,17 @@ import {ILSP11BasicSocialRecovery} from "./ILSP11BasicSocialRecovery.sol";
 
 // libraries
 import {ERC165Checker} from "../Custom/ERC165Checker.sol";
-import {LSP6Utils} from "../LSP6KeyManager/LSP6Utils.sol";
+import {LSP6Utils} from "@lukso/lsp-smart-contracts/contracts/LSP6KeyManager/LSP6Utils.sol";
 
 // modules
 import {ERC725} from "@erc725/smart-contracts/contracts/ERC725.sol";
 import {OwnableUnset} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import {LSP6KeyManager} from "../LSP6KeyManager/LSP6KeyManager.sol";
+import {LSP6KeyManager} from "@lukso/lsp-smart-contracts/contracts/LSP6KeyManager/LSP6KeyManager.sol";
 
 // constants
-import {_INTERFACEID_LSP6, _ALL_DEFAULT_PERMISSIONS} from "../LSP6KeyManager/LSP6Constants.sol";
+import {_INTERFACEID_LSP6, _ALL_DEFAULT_PERMISSIONS} from "@lukso/lsp-smart-contracts/contracts/LSP6KeyManager/LSP6Constants.sol";
 import {_INTERFACEID_LSP11} from "./LSP11Constants.sol";
 
 /**
@@ -24,7 +24,11 @@ import {_INTERFACEID_LSP11} from "./LSP11Constants.sol";
  * @author Fabian Vogelsteller, Yamen Merhi, Jean Cavallera
  * @notice Recovers the permission of a key to control an ERC725 contract through LSP6KeyManager
  */
-abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11BasicSocialRecovery {
+abstract contract LSP11BasicSocialRecoveryCore is
+    OwnableUnset,
+    ERC165,
+    ILSP11BasicSocialRecovery
+{
     using EnumerableSet for EnumerableSet.AddressSet;
     using EnumerableSet for EnumerableSet.Bytes32Set;
 
@@ -46,7 +50,8 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
 
     // Stores the address voted for by a guardian in a specific
     // recoverProcessId, in the current `_recoveryCounter`
-    mapping(uint256 => mapping(bytes32 => mapping(address => address))) internal _guardiansVotes;
+    mapping(uint256 => mapping(bytes32 => mapping(address => address)))
+        internal _guardiansVotes;
 
     // Maps all recoverProcessesIds to the _recoveryCounter
     mapping(uint256 => EnumerableSet.Bytes32Set) internal _recoverProcessesIds;
@@ -93,7 +98,12 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     /**
      * @inheritdoc ILSP11BasicSocialRecovery
      */
-    function getRecoverProcessesIds() public view override returns (bytes32[] memory) {
+    function getRecoverProcessesIds()
+        public
+        view
+        override
+        returns (bytes32[] memory)
+    {
         return _recoverProcessesIds[_recoveryCounter].values();
     }
 
@@ -121,16 +131,32 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     /**
      * @inheritdoc ILSP11BasicSocialRecovery
      */
-    function addGuardian(address newGuardian) public virtual override onlyOwner {
-        require(!_guardians.contains(newGuardian), "Provided address is already a guardian");
+    function addGuardian(address newGuardian)
+        public
+        virtual
+        override
+        onlyOwner
+    {
+        require(
+            !_guardians.contains(newGuardian),
+            "Provided address is already a guardian"
+        );
         _guardians.add(newGuardian);
     }
 
     /**
      * @inheritdoc ILSP11BasicSocialRecovery
      */
-    function removeGuardian(address currentGuardian) public virtual override onlyOwner {
-        require(_guardians.contains(currentGuardian), "Provided address is not a guardian");
+    function removeGuardian(address currentGuardian)
+        public
+        virtual
+        override
+        onlyOwner
+    {
+        require(
+            _guardians.contains(currentGuardian),
+            "Provided address is not a guardian"
+        );
         require(
             _guardians.length() > _guardiansThreshold,
             "Guardians number can not be lower than the threshold"
@@ -141,7 +167,12 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     /**
      * @inheritdoc ILSP11BasicSocialRecovery
      */
-    function setThreshold(uint256 newThreshold) public virtual override onlyOwner {
+    function setThreshold(uint256 newThreshold)
+        public
+        virtual
+        override
+        onlyOwner
+    {
         require(
             newThreshold <= _guardians.length() && newThreshold > 0,
             "Threshold should be between 1 and the guardiansCount"
@@ -152,7 +183,13 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     /**
      * @inheritdoc ILSP11BasicSocialRecovery
      */
-    function setSecret(bytes32 newHash) public virtual override onlyOwner NotZeroBytes32(newHash) {
+    function setSecret(bytes32 newHash)
+        public
+        virtual
+        override
+        onlyOwner
+        NotZeroBytes32(newHash)
+    {
         _secretHash = newHash;
     }
 
@@ -167,7 +204,9 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     {
         uint256 recoverCounter = _recoveryCounter;
         _recoverProcessesIds[recoverCounter].add(recoverProcessId);
-        _guardiansVotes[recoverCounter][recoverProcessId][msg.sender] = newOwner;
+        _guardiansVotes[recoverCounter][recoverProcessId][
+            msg.sender
+        ] = newOwner;
     }
 
     /**
@@ -188,7 +227,10 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
 
         address keyManager = ERC725(account).owner();
         require(
-            ERC165Checker.supportsERC165Interface(keyManager, _INTERFACEID_LSP6),
+            ERC165Checker.supportsERC165Interface(
+                keyManager,
+                _INTERFACEID_LSP6
+            ),
             "Owner of account doesn't support LSP6 InterfaceId"
         );
 
@@ -208,8 +250,16 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
     /**
      * @inheritdoc ERC165
      */
-    function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
-        return _interfaceId == _INTERFACEID_LSP11 || super.supportsInterface(_interfaceId);
+    function supportsInterface(bytes4 _interfaceId)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return
+            _interfaceId == _INTERFACEID_LSP11 ||
+            super.supportsInterface(_interfaceId);
     }
 
     // ---- internal functions
@@ -219,7 +269,10 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
      * - The address trying to recover didn't reach the guardiansThreshold
      * - The secret word provided is incorrect
      */
-    function _checkRequirements(bytes32 recoverProcessId, string memory plainSecret) internal view {
+    function _checkRequirements(
+        bytes32 recoverProcessId,
+        string memory plainSecret
+    ) internal view {
         uint256 recoverCounter = _recoveryCounter;
         uint256 senderVotes;
         uint256 guardiansLength = _guardians.length();
@@ -227,15 +280,22 @@ abstract contract LSP11BasicSocialRecoveryCore is OwnableUnset, ERC165, ILSP11Ba
         unchecked {
             for (uint256 i = 0; i < guardiansLength; i++) {
                 if (
-                    _guardiansVotes[recoverCounter][recoverProcessId][_guardians.at(i)] ==
-                    msg.sender
+                    _guardiansVotes[recoverCounter][recoverProcessId][
+                        _guardians.at(i)
+                    ] == msg.sender
                 ) {
                     senderVotes++;
                 }
             }
         }
-        require(senderVotes >= _guardiansThreshold, "You didnt reach the threshold");
+        require(
+            senderVotes >= _guardiansThreshold,
+            "You didnt reach the threshold"
+        );
 
-        require(keccak256(abi.encodePacked(plainSecret)) == _secretHash, "Wrong secret");
+        require(
+            keccak256(abi.encodePacked(plainSecret)) == _secretHash,
+            "Wrong secret"
+        );
     }
 }

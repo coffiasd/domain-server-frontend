@@ -24,11 +24,16 @@ async function main() {
     // console.log("check owner address:", otherAccount.address, " | ", res2);
 
     //deploy manager contract
-    const Manager = await hre.ethers.getContractFactory("Manager");
-    const manager = await Manager.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
-    const target = await manager.target();
-    console.log("target get target address:", target);
-    console.log("lsp manager address:", manager.address);
+    // const Manager = await hre.ethers.getContractFactory("Manager");
+    // const manager = await Manager.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
+    // const target = await manager.target();
+    // console.log("target get target address:", target);
+    // console.log("lsp manager address:", manager.address);
+
+    //deplay recover contract
+    const Recover = await hre.ethers.getContractFactory("Recover");
+    const recover = await Recover.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
+    console.log("recover address:", recover.address);
 
 }
 
