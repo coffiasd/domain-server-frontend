@@ -1,5 +1,5 @@
 .container {
-  padding: 0 2rem;
+  padding: 0;
 }
 
 .main {
@@ -62,8 +62,8 @@
 }
 
 .profileImage {
-  width: 10rem;
-  height: 10rem;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
   margin: 1rem auto;
   align-items: center;
@@ -99,7 +99,7 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 600px;
+  max-width: 900px;
 }
 
 .card:hover,
