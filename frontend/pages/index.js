@@ -11,6 +11,7 @@ import KeyManager from '@erc725/erc725.js/schemas/LSP6KeyManager.json';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 // import { Form } from 'react-bootstrap';
 import dynamic from 'next/dynamic'
+import TopHeader from '../components/Header'
 
 const DynamicVote = dynamic(() => import('../components/Vote'), {
   ssr: false,
@@ -86,66 +87,44 @@ export default function Home() {
     }
   };
 
-  const addController = async (event) => {
-    if (controllerAddress == "") {
-      alert("Please enter a controller address");
-      return;
-    }
+  // const addController = async (event) => {
+  //   if (controllerAddress == "") {
+  //     alert("Please enter a controller address");
+  //     return;
+  //   }
 
-    console.log("add controller address:", controllerAddress);
-    await ethereum.request({ method: 'eth_requestAccounts', params: [] });
-    const lspFactory = new LSPFactory(ethereum, {
-      chainId: 2828,
-    });
+  //   console.log("add controller address:", controllerAddress);
+  //   await ethereum.request({ method: 'eth_requestAccounts', params: [] });
+  //   const lspFactory = new LSPFactory(ethereum, {
+  //     chainId: 2828,
+  //   });
 
-    const manager = await lspFactory.UniversalProfile.deploy({
-      controllerAddresses: [
-        controllerAddress,
-      ],
-    });
-    console.log(manager);
+  //   const manager = await lspFactory.UniversalProfile.deploy({
+  //     controllerAddresses: [
+  //       controllerAddress,
+  //     ],
+  //   });
+  //   console.log(manager);
+  // }
+
+  //add an new guardian
+  const newGuardian = async (event) => {
+    //get provider 
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    //get signer
+    const signer = provider.getSigner();
+    //connect to lukso factory
+    const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
+    //call function
+    connectedContract.on("", () => {
+
+    })
   }
 
   return (
     <div className={styles.container}>
 
-      <nav className="navbar navbar-expand-lg navbar-light bg-white">
-        <div className="container-fluid">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-mdb-toggle="collapse"
-            data-mdb-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <i className="fas fa-bars"></i>
-          </button>
-
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <a className="navbar-brand mt-2 mt-lg-0" href="#">
-              <img
-                src="/icon.svg"
-                height="15"
-                alt="MDB Logo"
-                loading="lazy"
-              />
-            </a>
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <a className="nav-link" href="#">Dashboard</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-1">
-            <button type="button" className="btn btn-primary">Connect to UP</button>
-          </div>
-
-        </div>
-      </nav>
-
+      <TopHeader />
 
       <Head>
         <title>Lukso Demo Page</title>
