@@ -7,23 +7,46 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+    //deploy account contract
+    // const [owner, otherAccount] = await ethers.getSigners();
+    // const Account = await hre.ethers.getContractFactory("Account");
+    // const account = await Account.deploy(owner.address);
+    // await account.deployed();
+    // console.log("deployed to:", account.address);
+    // const res = await account.owner();
+    // console.log("check owner address:", owner.address, " | ", res);
+    // console.log("start transfer owner address");
+    // await account.transferOwnership(otherAccount.address);
+    // const pending = await account.pendingOwner();
+    // console.log("check pending owner address:", pending);
+    // await account.connect(otherAccount).claimOwnership();
+    // const res2 = await account.owner();
+    // console.log("check owner address:", otherAccount.address, " | ", res2);
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+    //deploy manager contract
+    // const Manager = await hre.ethers.getContractFactory("Manager");
+    // const manager = await Manager.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
+    // const target = await manager.target();
+    // console.log("target get target address:", target);
+    // console.log("lsp manager address:", manager.address);
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+    //deplay recover contract
+    // const Recover = await hre.ethers.getContractFactory("Recover");
+    // const recover = await Recover.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
+    // console.log("recover address:", recover.address);
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+    console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  await lock.deployed();
+    // const Recover = await hre.ethers.getContractFactory("Test");
+    // const recover = await Recover.deploy();
+    // console.log("recover address:", recover.address);
 
-  console.log("Lock with 1 ETH deployed to:", lock.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });
