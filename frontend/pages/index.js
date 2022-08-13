@@ -9,7 +9,17 @@ import 'isomorphic-fetch';
 import Metadata from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 import KeyManager from '@erc725/erc725.js/schemas/LSP6KeyManager.json';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-import { Form } from 'react-bootstrap';
+// import { Form } from 'react-bootstrap';
+import dynamic from 'next/dynamic'
+
+const DynamicVote = dynamic(() => import('../components/Vote'), {
+  ssr: false,
+})
+
+const AddVote = dynamic(() => import('../components/Add'), {
+  ssr: false,
+})
+
 
 export default function Home() {
   var controllerAddress = ""
@@ -21,12 +31,6 @@ export default function Home() {
   const [user, setUser] = React.useState({ name: "" });
   const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
   const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
-
-  const changeEvent = (event) => {
-    controllerAddress = event.target.value;
-    console.log(controllerAddress);
-  }
-
 
   const connectWallet = async (event) => {
     if (window.ethereum) {
@@ -151,142 +155,13 @@ export default function Home() {
 
       <main className={styles.main}>
 
-
-        <section className="vh-50 container">
-          <form className="row row-cols-lg-auto g-6 align-items-center d-flex justify-content-center ">
-            <div className="col-12">
-              <label className="visually-hidden" htmlFor="inlineFormInputGroupUsername">Address</label>
-              <div className="input-group">
-                {/* <div className="input-group-text">@</div> */}
-                <input type="text" className="form-control" id="inlineFormInputGroupUsername" placeholder="Username" />
-              </div>
-            </div>
-
-            <div className="col-12">
-              <Form.Select aria-label="Default select example">
-                <option>Select This</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </Form.Select>
-            </div>
-
-            <div className="col-12">
-              <div className="form-check">
-                <input className="form-check-input" type="checkbox" id="inlineFormCheck" />
-                <label className="form-check-label" htmlFor="inlineFormCheck">
-                  Remember me
-                </label>
-              </div>
-            </div>
-
-            <div className="col-12">
-              <button type="button" className="btn btn-primary">Vote</button>
-            </div>
-          </form>
-
-        </section>
-
-        {/* <section className="vh-50">
-          <div className="container py-5">
-            <div className="row d-flex justify-content-center align-items-center">
-              <div className="col col-lg-9 col-xl-7">
-                <div className="card rounded-3">
-                  <div className="card-body p-4">
-
-                    <h4 className="text-center my-3 pb-3">G list</h4>
-
-                    <form className="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
-                      <div className="col-12">
-                        <div className="form-outline">
-                          <input type="text" id="form1" className="form-control" />
-                          <label className="form-label" htmlFor="form1">Add a g here</label>
-                        </div>
-                      </div>
-
-                      <div className="col-12">
-                        <button type="submit" className="btn btn-primary">Add</button>
-                      </div>
-                    </form>
-
-                    <table className="table mb-3">
-                      <thead>
-                        <tr>
-                          <th scope="col">No.</th>
-                          <th scope="col">Address</th>
-                          <th scope="col">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>ox****ad23</td>
-                          <td>
-                            <button type="submit" className="btn btn-danger">Delete</button>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>ox****ad23</td>
-                          <td>
-                            <button type="submit" className="btn btn-danger">Delete</button>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>ox****ad23</td>
-                          <td>
-                            <button type="submit" className="btn btn-danger">Delete</button>
-                          </td>
-                        </tr>
-
-                      </tbody>
-                    </table>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* <section className="vh-50 container  d-flex justify-content-center">
+          <DynamicVote />
         </section> */}
 
-        <div className={styles.grid}>
-          {/* 
-          {login ? <Card
-            style={{
-              width: '30rem',
-            }}
-          >
-            <img
-              title='profile image'
-              className={styles.profileImage}
-              alt="Card"
-              src="/favicon.ico"
-            />
-            <span className={styles.imgSpan}>username:{user.name}(0x5F****0aa3)</span>
-            <span className={styles.imgSpan}>controller:0xdf****b0e3</span>
-            <CardBody>
-              <Form>
-
-                <hr className="hr" />
-                <List type="unstyled">
-                  <li>
-                    Guardians
-                    <ul>
-                      {guardians.map(guardian => (
-                        <li>{guardian}</li>
-                      ))}
-
-                    </ul>
-                  </li>
-                </List>
-              </Form>
-            </CardBody>
-          </Card> : ""} */}
-
-        </div>
+        <section className="vh-50">
+          <AddVote />
+        </section>
 
       </main >
 
