@@ -1,5 +1,7 @@
 
 export default function AddVote() {
+    const [guardian, setguardian] = React.useState("");
+
     return (
         <div className="container py-5">
             <div className="row d-flex justify-content-center align-items-center">
@@ -18,7 +20,7 @@ export default function AddVote() {
                                 </div>
 
                                 <div className="col-12">
-                                    <button type="submit" className="btn btn-primary">Add</button>
+                                    <button type="button" className="btn btn-primary">Add</button>
                                 </div>
                             </form>
 
@@ -36,7 +38,7 @@ export default function AddVote() {
                                         <th scope="row">1</th>
                                         <td>ox****ad23</td>
                                         <td>
-                                            <button type="submit" className="btn btn-danger">Delete</button>
+                                            <button type="button" className="btn btn-danger">Delete</button>
                                         </td>
                                     </tr>
 
@@ -44,15 +46,7 @@ export default function AddVote() {
                                         <th scope="row">1</th>
                                         <td>ox****ad23</td>
                                         <td>
-                                            <button type="submit" className="btn btn-danger">Delete</button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>ox****ad23</td>
-                                        <td>
-                                            <button type="submit" className="btn btn-danger">Delete</button>
+                                            <button type="button" className="btn btn-danger">Delete</button>
                                         </td>
                                     </tr>
 

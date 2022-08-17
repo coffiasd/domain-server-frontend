@@ -117,7 +117,7 @@ export default function Home() {
     //connect to lukso factory
     const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, recoverJSON.abi, signer);
     //call function
-    connectedContract.on("", () => {
+    connectedContract.on("addGuardian", (address) => {
 
     })
   }
