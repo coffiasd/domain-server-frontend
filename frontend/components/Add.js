@@ -1,6 +1,12 @@
+import React from 'react';
 
-export default function AddVote() {
+export default function AddVote({ newGuardian }) {
     const [guardian, setguardian] = React.useState("");
+
+    const onChangeEvent = (event) => {
+        const address = event.target.value;
+        setguardian(address)
+    }
 
     return (
         <div className="container py-5">
@@ -14,13 +20,13 @@ export default function AddVote() {
                             <form className="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
                                 <div className="col-12">
                                     <div className="form-outline">
-                                        <input type="text" id="form1" className="form-control" />
-                                        <label className="form-label" htmlFor="form1">Add a g here</label>
+                                        <input type="text" id="form1" className="form-control" onChange={onChangeEvent} value={guardian} />
+                                        <label className="form-label" htmlFor="form1">Address</label>
                                     </div>
                                 </div>
 
                                 <div className="col-12">
-                                    <button type="button" className="btn btn-primary">Add</button>
+                                    <button type="button" onClick={event => newGuardian(event, guardian)} className="btn btn-primary">Add</button>
                                 </div>
                             </form>
 
@@ -56,7 +62,7 @@ export default function AddVote() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

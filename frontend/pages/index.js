@@ -9,7 +9,6 @@ import 'isomorphic-fetch';
 import Metadata from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 import KeyManager from '@erc725/erc725.js/schemas/LSP6KeyManager.json';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-// import { Form } from 'react-bootstrap';
 import dynamic from 'next/dynamic'
 import TopHeader from '../components/Header'
 import recoverJSON from '../utils/Recover.json'
@@ -87,38 +86,25 @@ export default function Home() {
     }
   };
 
-  // const addController = async (event) => {
-  //   if (controllerAddress == "") {
-  //     alert("Please enter a controller address");
-  //     return;
-  //   }
-
-  //   console.log("add controller address:", controllerAddress);
-  //   await ethereum.request({ method: 'eth_requestAccounts', params: [] });
-  //   const lspFactory = new LSPFactory(ethereum, {
-  //     chainId: 2828,
-  //   });
-
-  //   const manager = await lspFactory.UniversalProfile.deploy({
-  //     controllerAddresses: [
-  //       controllerAddress,
-  //     ],
-  //   });
-  //   console.log(manager);
-  // }
-
   //add an new guardian
-  const newGuardian = async (event) => {
+  const newGuardian = async (event, address) => {
     //get provider 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    //get signer
-    const signer = provider.getSigner();
+    const web3provider = new Web3(
+      new Web3.providers.HttpProvider(RPC_ENDPOINT),
+    );
+    console.log(Web3.version);
+    var web3 = new Web3(web3provider);
     //connect to lukso factory
-    const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, recoverJSON.abi, signer);
-    //call function
-    connectedContract.on("addGuardian", (address) => {
-
-    })
+    const connectedContract = new web3.eth.Contract(recoverJSON.abi, process.env.ReAddress);
+    console.log(process.env);
+    connectedContract.methods.addGuardian(address).send({ from: "0x52bf58425cAd0B50fFcA8Dbe5447dcE9420a2610" }).then(function (receipt) {
+      console.log(receipt);
+    });
+    //set provider
+    web3.setProvider(web3provider)
+    //call addGuardian function
+    const send = await connectedContract.methods.addGuardian(address).send()
+    console.log(send);
   }
 
   return (
@@ -139,7 +125,7 @@ export default function Home() {
         </section> */}
 
         <section className="vh-50">
-          <AddVote />
+          <AddVote newGuardian={newGuardian} />
         </section>
 
       </main >
