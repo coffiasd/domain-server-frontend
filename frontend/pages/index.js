@@ -12,6 +12,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 // import { Form } from 'react-bootstrap';
 import dynamic from 'next/dynamic'
 import TopHeader from '../components/Header'
+import recoverJSON from '../utils/Recover.json'
 
 const DynamicVote = dynamic(() => import('../components/Vote'), {
   ssr: false,
@@ -113,9 +114,9 @@ export default function Home() {
     //get signer
     const signer = provider.getSigner();
     //connect to lukso factory
-    const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
+    const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, recoverJSON.abi, signer);
     //call function
-    connectedContract.on("", () => {
+    connectedContract.on("addGuardian", (address) => {
 
     })
   }
