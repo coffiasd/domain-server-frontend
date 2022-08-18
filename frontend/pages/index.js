@@ -81,7 +81,6 @@ export default function Home() {
         }
       );
 
-
     } else {
       alert("Please install MetaMask");
     }
