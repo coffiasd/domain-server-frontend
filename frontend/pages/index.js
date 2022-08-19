@@ -92,19 +92,23 @@ export default function Home() {
     const web3provider = new Web3(
       new Web3.providers.HttpProvider(RPC_ENDPOINT),
     );
-    console.log(Web3.version);
     var web3 = new Web3(web3provider);
+
+    //verify if the address is valid
+    if (!web3.utils.isAddress(address)) {
+      alert("Invalid address");
+      return
+    }
+
     //connect to lukso factory
+    console.log(recoverJSON.abi, process.env.ReAddress);
     const connectedContract = new web3.eth.Contract(recoverJSON.abi, process.env.ReAddress);
-    console.log(process.env);
-    connectedContract.methods.addGuardian(address).send({ from: "0x52bf58425cAd0B50fFcA8Dbe5447dcE9420a2610" }).then(function (receipt) {
-      console.log(receipt);
-    });
-    //set provider
-    web3.setProvider(web3provider)
-    //call addGuardian function
-    const send = await connectedContract.methods.addGuardian(address).send()
-    console.log(send);
+    // connectedContract.methods.addGuardian(address).call({ from: "0x52bf58425cAd0B50fFcA8Dbe5447dcE9420a2610" }).then(function (receipt) {
+    //   console.log(receipt);
+    // });
+    console.log(connectedContract);
+    const owner = await connectedContract.methods.owner().call();
+    console.log(owner);
   }
 
   return (
