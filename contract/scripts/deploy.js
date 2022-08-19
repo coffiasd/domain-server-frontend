@@ -31,12 +31,11 @@ async function main() {
     // console.log("lsp manager address:", manager.address);
 
     //deplay recover contract
-    // const Recover = await hre.ethers.getContractFactory("Recover");
-    // const recover = await Recover.deploy("0x9cda0f443a3CB4BAE13b8af5280cf6411EF01050");
-    // console.log("recover address:", recover.address);
-    const [deployer] = await ethers.getSigners();
-    console.log("Deploying contracts with the account:", deployer.address);
-    console.log("Account balance:", (await deployer.getBalance()).toString());
+    const Recover = await hre.ethers.getContractFactory("Recover");
+    const recover = await Recover.deploy("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    await recover.deployed();
+    console.log("recover address:", recover.address);
+
 
     // const Recover = await hre.ethers.getContractFactory("Test");
     // const recover = await Recover.deploy();

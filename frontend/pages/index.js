@@ -30,7 +30,8 @@ export default function Home() {
   const [buttonClass, setbuttonClass] = React.useState("spinner-border spinner-border-sm visually-hidden")
   const [login, SetLogin] = React.useState(false);
   const [user, setUser] = React.useState({ name: "" });
-  const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
+  // const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
+  const RPC_ENDPOINT = 'http://localhost:8545';
   const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
   const connectWallet = async (event) => {
@@ -88,6 +89,9 @@ export default function Home() {
 
   //add an new guardian
   const newGuardian = async (event, address) => {
+    //login address.
+    const loginAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
     //get provider 
     const web3provider = new Web3(
       new Web3.providers.HttpProvider(RPC_ENDPOINT),
@@ -100,15 +104,21 @@ export default function Home() {
       return
     }
 
-    //connect to lukso factory
     console.log(recoverJSON.abi, process.env.ReAddress);
     const connectedContract = new web3.eth.Contract(recoverJSON.abi, process.env.ReAddress);
-    // connectedContract.methods.addGuardian(address).call({ from: "0x52bf58425cAd0B50fFcA8Dbe5447dcE9420a2610" }).then(function (receipt) {
-    //   console.log(receipt);
-    // });
-    console.log(connectedContract);
-    const owner = await connectedContract.methods.owner().call();
-    console.log(owner);
+    console.log("owner of contract:", await connectedContract.methods.owner().call());
+    connectedContract.methods.addGuardian(address).send({ from: loginAddress }).catch(function (error) {
+      alert(error.toString());
+    });
+    console.log("getGuardians:", await connectedContract.methods.getGuardians().call());
+    console.log("isGuardian:", await connectedContract.methods.isGuardian(address).call());
+
+  }
+
+
+  //get all guardians list.
+  const getGuardians = () => {
+
   }
 
   return (
