@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-export default function AddVote({ newGuardian }) {
+export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
     const [guardian, setguardian] = React.useState("");
+    const [list, setlist] = React.useState([]);
 
     const onChangeEvent = (event) => {
         const address = event.target.value;
-        setguardian(address)
+        setguardian(address);
     }
+
+    useEffect(() => {
+        guardianList().then(function (data) {
+            setlist(data);
+        })
+    })
 
     return (
         <div className="container py-5">
@@ -15,7 +22,7 @@ export default function AddVote({ newGuardian }) {
                     <div className="card rounded-3">
                         <div className="card-body p-4">
 
-                            <h4 className="text-center my-3 pb-3">G list</h4>
+                            <h4 className="text-center my-3 pb-3">guardian list</h4>
 
                             <form className="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
                                 <div className="col-12">
@@ -40,21 +47,15 @@ export default function AddVote({ newGuardian }) {
                                 </thead>
                                 <tbody>
 
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>ox****ad23</td>
-                                        <td>
-                                            <button type="button" className="btn btn-danger">Delete</button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>ox****ad23</td>
-                                        <td>
-                                            <button type="button" className="btn btn-danger">Delete</button>
-                                        </td>
-                                    </tr>
+                                    {list.map((item, index) => {
+                                        return <tr key={index}>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{item}</td>
+                                            <td>
+                                                <button type="button" onClick={event => removeGuardian(event, item)} key={index} className="btn btn-danger">Delete</button>
+                                            </td>
+                                        </tr>
+                                    })}
 
                                 </tbody>
                             </table>

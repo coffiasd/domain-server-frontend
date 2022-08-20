@@ -23,9 +23,6 @@ const AddVote = dynamic(() => import('../components/Add'), {
 
 
 export default function Home() {
-  var controllerAddress = ""
-  const [guardians, setguardians] = React.useState([]);
-
   const [buttonValue, setbuttonValue] = React.useState("Connect Lukso Wallet")
   const [buttonClass, setbuttonClass] = React.useState("spinner-border spinner-border-sm visually-hidden")
   const [login, SetLogin] = React.useState(false);
@@ -33,6 +30,21 @@ export default function Home() {
   // const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
   const RPC_ENDPOINT = 'http://localhost:8545';
   const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
+
+  //login address.
+  const loginAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+  //get provider.
+  const web3provider = new Web3(
+    new Web3.providers.HttpProvider(RPC_ENDPOINT),
+  );
+  var web3 = new Web3(web3provider);
+  console.log(recoverJSON.abi, process.env.ReAddress);
+  const connectedContract = new web3.eth.Contract(recoverJSON.abi, process.env.ReAddress);
+
+  const getGuardians = async (event) => {
+    return await connectedContract.methods.getGuardians().call();
+  }
 
   const connectWallet = async (event) => {
     if (window.ethereum) {
@@ -78,7 +90,7 @@ export default function Home() {
           managereData.forEach(element => {
             list.push(element.key);
           });
-          setguardians(list);
+          // setguardians(list);
         }
       );
 
@@ -87,38 +99,60 @@ export default function Home() {
     }
   };
 
-  //add an new guardian
+  //add a new guardian.
   const newGuardian = async (event, address) => {
-    //login address.
-    const loginAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-
-    //get provider 
-    const web3provider = new Web3(
-      new Web3.providers.HttpProvider(RPC_ENDPOINT),
-    );
-    var web3 = new Web3(web3provider);
-
     //verify if the address is valid
     if (!web3.utils.isAddress(address)) {
       alert("Invalid address");
       return
     }
 
-    console.log(recoverJSON.abi, process.env.ReAddress);
-    const connectedContract = new web3.eth.Contract(recoverJSON.abi, process.env.ReAddress);
-    console.log("owner of contract:", await connectedContract.methods.owner().call());
     connectedContract.methods.addGuardian(address).send({ from: loginAddress }).catch(function (error) {
       alert(error.toString());
+    }).then(function (r) {
+      alert("Guardian added");
     });
-    console.log("getGuardians:", await connectedContract.methods.getGuardians().call());
-    console.log("isGuardian:", await connectedContract.methods.isGuardian(address).call());
-
   }
 
+  //remove a guardian.
+  const removeGuardian = async (event, address) => {
+    connectedContract.methods.removeGuardian(address).send({ from: loginAddress }).catch(function (error) {
+      alert(error.toString());
+    }).then(function (r) {
+      alert("Guardian removed");
+    });
+  }
 
-  //get all guardians list.
-  const getGuardians = () => {
+  //vote ro recover.
+  const voteToRecover = async (event, RecoverProcessId, NewAddress) => {
+    if (RecoverProcessId == "") {
+      alert("Please select a recover process");
+      return
+    }
 
+    //verify if the address is valid
+    if (!web3.utils.isAddress(NewAddress)) {
+      alert("Invalid address");
+      return
+    }
+
+    //we need to convert string value to byte32 value.
+    connectedContract.methods.voteToRecover(web3.utils.asciiToHex(RecoverProcessId), NewAddress).send({ from: loginAddress }).catch(function (error) {
+      alert(error.toString());
+      return
+    }).then(function (r) {
+      alert("Vote added");
+    });
+  }
+
+  //get the list of recover processes.
+  const getRecoverProcessesIds = async (event) => {
+    connectedContract.methods.getRecoverProcessesIds().call().catch(function (error) {
+      alert(error.toString());
+      return
+    }).then(function (r) {
+      console.log(r);
+    })
   }
 
   return (
@@ -134,13 +168,13 @@ export default function Home() {
 
       <main className={styles.main}>
 
-        {/* <section className="vh-50 container  d-flex justify-content-center">
-          <DynamicVote />
-        </section> */}
-
-        <section className="vh-50">
-          <AddVote newGuardian={newGuardian} />
+        <section className="vh-40 container d-flex justify-content-center">
+          <DynamicVote VoteToRecover={voteToRecover} voteList={getRecoverProcessesIds} />
         </section>
+
+        {/* <section className="vh-50">
+          <AddVote newGuardian={newGuardian} guardianList={getGuardians} removeGuardian={removeGuardian} />
+        </section> */}
 
       </main >
 

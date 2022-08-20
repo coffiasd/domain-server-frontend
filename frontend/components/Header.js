@@ -32,7 +32,7 @@ export default function Header() {
                 </div>
 
                 <div className="col-1">
-                    <button type="button" className="btn btn-primary">Connect to UP</button>
+                    <button type="button" className="btn btn-primary">Connect</button>
                 </div>
 
             </div>
