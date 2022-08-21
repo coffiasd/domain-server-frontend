@@ -1,4 +1,8 @@
 import React, { useEffect } from 'react';
+import {
+    MDBCol,
+    MDBInput,
+} from 'mdb-react-ui-kit';
 
 export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
     const [guardian, setguardian] = React.useState("");
@@ -27,10 +31,11 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
 
                             <form className="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
                                 <div className="col-12">
-                                    <div className="form-outline">
-                                        <input type="text" id="form1" className="form-control" onChange={onChangeEvent} value={guardian} />
-                                        <label className="form-label" htmlFor="form1">Address</label>
-                                    </div>
+
+                                    <MDBCol size='12'>
+                                        <MDBInput label='new guardian address' id='form2' type='text' onChange={onChangeEvent} value={guardian} />
+                                    </MDBCol>
+
                                 </div>
 
                                 <div className="col-12">

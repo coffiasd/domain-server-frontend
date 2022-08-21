@@ -34,15 +34,6 @@ export default function Vote({ VoteToRecover, voteList }) {
         })
     }, [])
 
-    // useEffect(() => {
-    //     voteList().then((ret) => {
-    //         console.log("ProcessList1:", ret);
-    //         setList(ret);
-    //         alert(ret);
-    //         console.log("ProcessList2:", list);
-    //     });
-    // }, []);
-
     return (
         <MDBRow tag='form' className='row-cols-lg-auto g-3 align-items-center'>
             <MDBCol size='12'>
@@ -60,6 +51,8 @@ export default function Vote({ VoteToRecover, voteList }) {
                     <tr>
                         <th scope='col'>#</th>
                         <th scope='col'>RecoverProcessId</th>
+                        <th scope='col'>newHash</th>
+                        <th scope='col'>newOwner</th>
                         <th scope='col'>Option</th>
                     </tr>
                 </MDBTableHead>
@@ -67,7 +60,17 @@ export default function Vote({ VoteToRecover, voteList }) {
                     {ProcessID ? ProcessID.map((item, index) => {
                         return <tr key={index}>
                             <th scope='row'>{index + 1}</th>
-                            <td>{item}</td>
+                            <td>{item.slice(0, 10)}******</td>
+                            <td>
+                                <MDBCol size='12'>
+                                    <MDBInput label='give me a new hash' id='form2' type='text' />
+                                </MDBCol>
+                            </td>
+                            <td>
+                                <MDBCol size='12'>
+                                    <MDBInput label='give me a new owner address' id='form2' type='text' />
+                                </MDBCol>
+                            </td>
                             <td><button type="button" className="btn btn-danger">Recover</button></td>
                         </tr>
                     }) : null}

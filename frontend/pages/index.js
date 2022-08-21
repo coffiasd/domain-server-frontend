@@ -149,6 +149,19 @@ export default function Home() {
     return await connectedContract.methods.getRecoverProcessesIds().call({ from: loginAddress })
   }
 
+  // recoverOwnership.
+  // @param recoverProcessId byte32
+  // @param plainSecret string
+  // @param newHash byte32
+  const recoverOwnership = async (event, recoverProcessId, plainSecret, newHash) => {
+    connectedContract.methods.recoverOwnership(recoverProcessId, "", web3.utils.asciiToHex(newHash)).send({ from: loginAddress }).then(function (r) {
+      alert("Recovered Ownership");
+    }).catch(function (error) {
+      alert(error.toString());
+    });
+  }
+
+
   return (
     <div className={styles.container}>
 
@@ -166,9 +179,9 @@ export default function Home() {
           <DynamicVote VoteToRecover={voteToRecover} voteList={getRecoverProcessesIds} />
         </section>
 
-        {/* <section className="vh-50">
+        <section className="vh-50">
           <AddVote newGuardian={newGuardian} guardianList={getGuardians} removeGuardian={removeGuardian} />
-        </section> */}
+        </section>
 
       </main >
 
