@@ -12,8 +12,9 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
     useEffect(() => {
         guardianList().then(function (data) {
             setlist(data);
+            console.log("useEffect list:", list);
         })
-    })
+    }, [])
 
     return (
         <div className="container py-5">
@@ -46,7 +47,6 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {list.map((item, index) => {
                                         return <tr key={index}>
                                             <th scope="row">{index + 1}</th>
@@ -55,7 +55,8 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
                                                 <button type="button" onClick={event => removeGuardian(event, item)} key={index} className="btn btn-danger">Delete</button>
                                             </td>
                                         </tr>
-                                    })}
+                                    })
+                                    }
 
                                 </tbody>
                             </table>

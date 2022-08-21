@@ -3,7 +3,10 @@ import {
     MDBRow,
     MDBCol,
     MDBBtn,
-    MDBInput
+    MDBInput,
+    MDBTable,
+    MDBTableHead,
+    MDBTableBody
 } from 'mdb-react-ui-kit';
 
 export default function Vote({ VoteToRecover, voteList }) {
@@ -13,7 +16,7 @@ export default function Vote({ VoteToRecover, voteList }) {
     //a new address.
     const [NewAddress, setNewAddress] = React.useState("");
     //the list of processID.
-    const [list, setlist] = React.useState([]);
+    const [ProcessID, setProcessID] = React.useState([]);
 
     const onChangeRecoverProcessId = (event) => {
         const RecoverProcessId = event.target.value;
@@ -27,10 +30,18 @@ export default function Vote({ VoteToRecover, voteList }) {
 
     useEffect(() => {
         voteList().then(function (data) {
-            console.log("processID:", data);
-            setlist(data);
+            setProcessID(data);
         })
-    });
+    }, [])
+
+    // useEffect(() => {
+    //     voteList().then((ret) => {
+    //         console.log("ProcessList1:", ret);
+    //         setList(ret);
+    //         alert(ret);
+    //         console.log("ProcessList2:", list);
+    //     });
+    // }, []);
 
     return (
         <MDBRow tag='form' className='row-cols-lg-auto g-3 align-items-center'>
@@ -43,6 +54,28 @@ export default function Vote({ VoteToRecover, voteList }) {
             <MDBCol size='12'>
                 <MDBBtn type='button' onClick={event => VoteToRecover(event, RecoverProcessId, NewAddress)}>Vote</MDBBtn>
             </MDBCol>
+
+            <MDBTable>
+                <MDBTableHead>
+                    <tr>
+                        <th scope='col'>#</th>
+                        <th scope='col'>RecoverProcessId</th>
+                        <th scope='col'>Option</th>
+                    </tr>
+                </MDBTableHead>
+                <MDBTableBody>
+                    {ProcessID ? ProcessID.map((item, index) => {
+                        return <tr key={index}>
+                            <th scope='row'>{index + 1}</th>
+                            <td>{item}</td>
+                            <td><button type="button" className="btn btn-danger">Recover</button></td>
+                        </tr>
+                    }) : null}
+
+                </MDBTableBody>
+            </MDBTable>
+
         </MDBRow>
+
     );
 }

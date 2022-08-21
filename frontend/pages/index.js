@@ -32,7 +32,7 @@ export default function Home() {
   const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
   //login address.
-  const loginAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+  const loginAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
 
   //get provider.
   const web3provider = new Web3(
@@ -107,19 +107,19 @@ export default function Home() {
       return
     }
 
-    connectedContract.methods.addGuardian(address).send({ from: loginAddress }).catch(function (error) {
-      alert(error.toString());
-    }).then(function (r) {
+    connectedContract.methods.addGuardian(address).send({ from: loginAddress }).then(function (r) {
       alert("Guardian added");
+    }).catch(function (error) {
+      alert(error.toString());
     });
   }
 
   //remove a guardian.
   const removeGuardian = async (event, address) => {
-    connectedContract.methods.removeGuardian(address).send({ from: loginAddress }).catch(function (error) {
-      alert(error.toString());
-    }).then(function (r) {
+    connectedContract.methods.removeGuardian(address).send({ from: loginAddress }).then(function (r) {
       alert("Guardian removed");
+    }).catch(function (error) {
+      alert(error.toString());
     });
   }
 
@@ -137,22 +137,16 @@ export default function Home() {
     }
 
     //we need to convert string value to byte32 value.
-    connectedContract.methods.voteToRecover(web3.utils.asciiToHex(RecoverProcessId), NewAddress).send({ from: loginAddress }).catch(function (error) {
-      alert(error.toString());
-      return
-    }).then(function (r) {
+    connectedContract.methods.voteToRecover(web3.utils.asciiToHex(RecoverProcessId), NewAddress).send({ from: loginAddress }).then(function (r) {
       alert("Vote added");
+    }).catch(function (error) {
+      alert(error.toString());
     });
   }
 
   //get the list of recover processes.
   const getRecoverProcessesIds = async (event) => {
-    connectedContract.methods.getRecoverProcessesIds().call().catch(function (error) {
-      alert(error.toString());
-      return
-    }).then(function (r) {
-      console.log(r);
-    })
+    return await connectedContract.methods.getRecoverProcessesIds().call({ from: loginAddress })
   }
 
   return (
