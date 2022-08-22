@@ -24,7 +24,7 @@
 
     first and foremost we need to deploy an ER725Account.
 
-### LSP6 kEY Manager Contract
+### LSP6 KEY Manager Contract
 
     need an address of the ER725Account to control.
 
