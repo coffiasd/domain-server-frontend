@@ -32,7 +32,7 @@ export default function Home() {
   const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
   //login address.
-  const loginAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+  const loginAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 
   //get provider.
   const web3provider = new Web3(
@@ -149,16 +149,17 @@ export default function Home() {
     return await connectedContract.methods.getRecoverProcessesIds().call({ from: loginAddress })
   }
 
+  //set a new secret key.
+  const setSecretFunc = async (event, newSecret) => {
+    return await connectedContract.methods.setSecret(web3.utils.soliditySha3(web3.utils.encodePacked({ value: newSecret, type: 'string' }))).send({ from: loginAddress })
+  }
+
   // recoverOwnership.
   // @param recoverProcessId byte32
   // @param plainSecret string
   // @param newHash byte32
   const recoverOwnership = async (event, recoverProcessId, plainSecret, newHash) => {
-    connectedContract.methods.recoverOwnership(recoverProcessId, "", web3.utils.asciiToHex(newHash)).send({ from: loginAddress }).then(function (r) {
-      alert("Recovered Ownership");
-    }).catch(function (error) {
-      alert(error.toString());
-    });
+    return await connectedContract.methods.recoverOwnership(recoverProcessId, plainSecret, web3.utils.asciiToHex(newHash)).send({ from: loginAddress })
   }
 
 
@@ -176,11 +177,11 @@ export default function Home() {
       <main className={styles.main}>
 
         <section className="vh-40 container d-flex justify-content-center">
-          <DynamicVote VoteToRecover={voteToRecover} voteList={getRecoverProcessesIds} />
+          <DynamicVote VoteToRecover={voteToRecover} voteList={getRecoverProcessesIds} recoverOwnership={recoverOwnership} />
         </section>
 
         <section className="vh-50">
-          <AddVote newGuardian={newGuardian} guardianList={getGuardians} removeGuardian={removeGuardian} />
+          <AddVote newGuardian={newGuardian} guardianList={getGuardians} removeGuardian={removeGuardian} setSecretFunc={setSecretFunc} />
         </section>
 
       </main >

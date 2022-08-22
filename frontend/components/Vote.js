@@ -9,7 +9,7 @@ import {
     MDBTableBody
 } from 'mdb-react-ui-kit';
 
-export default function Vote({ VoteToRecover, voteList }) {
+export default function Vote({ VoteToRecover, voteList, recoverOwnership }) {
 
     //RecoverProcessId.
     const [RecoverProcessId, setRecoverProcessId] = React.useState("");
@@ -17,23 +17,47 @@ export default function Vote({ VoteToRecover, voteList }) {
     const [NewAddress, setNewAddress] = React.useState("");
     //the list of processID.
     const [ProcessID, setProcessID] = React.useState([]);
+    //set newHash value.
+    const [NewHash, setNewHash] = React.useState("");
+    //old 
+    const [OldHash, setOldHash] = React.useState("");
 
+    //on processId value change.
     const onChangeRecoverProcessId = (event) => {
         const RecoverProcessId = event.target.value;
         setRecoverProcessId(RecoverProcessId);
     }
 
+    //on new hash value change.
+    const onChangeNewHash = (event) => {
+        const NewHash = event.target.value;
+        setNewHash(NewHash);
+    }
+
+    const onChangeOldHash = (event) => {
+        const OldHash = event.target.value;
+        setOldHash(OldHash);
+    }
+
+    //on new address value change.
     const onChangeNewAddress = (event) => {
         const address = event.target.value;
         setNewAddress(address);
     }
 
+    //RecoverOwner.
+    const RecoverOwner = (event, oldHash, newHash, processID) => {
+        recoverOwnership(event, processID, oldHash, newHash)
+    }
+
+    //use [] to call the function voteList() when the component is mounted.
     useEffect(() => {
         voteList().then(function (data) {
             setProcessID(data);
         })
     }, [])
 
+    //render.
     return (
         <MDBRow tag='form' className='row-cols-lg-auto g-3 align-items-center'>
             <MDBCol size='12'>
@@ -51,8 +75,8 @@ export default function Vote({ VoteToRecover, voteList }) {
                     <tr>
                         <th scope='col'>#</th>
                         <th scope='col'>RecoverProcessId</th>
-                        <th scope='col'>newHash</th>
-                        <th scope='col'>newOwner</th>
+                        <th scope='col'>oldSecret</th>
+                        <th scope='col'>newSecret</th>
                         <th scope='col'>Option</th>
                     </tr>
                 </MDBTableHead>
@@ -63,15 +87,15 @@ export default function Vote({ VoteToRecover, voteList }) {
                             <td>{item.slice(0, 10)}******</td>
                             <td>
                                 <MDBCol size='12'>
-                                    <MDBInput label='give me a new hash' id='form2' type='text' />
+                                    <MDBInput label='OldSecret' id='form2' type='text' onChange={onChangeOldHash} value={OldHash} />
                                 </MDBCol>
                             </td>
                             <td>
                                 <MDBCol size='12'>
-                                    <MDBInput label='give me a new owner address' id='form2' type='text' />
+                                    <MDBInput label='NewSecret' id='form2' type='text' onChange={onChangeNewHash} value={NewHash} />
                                 </MDBCol>
                             </td>
-                            <td><button type="button" className="btn btn-danger">Recover</button></td>
+                            <td><button type="button" className="btn btn-danger" onClick={event => RecoverOwner(event, OldHash, NewHash, item)}>Recover</button></td>
                         </tr>
                     }) : null}
 

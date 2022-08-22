@@ -4,8 +4,9 @@ import {
     MDBInput,
 } from 'mdb-react-ui-kit';
 
-export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
+export default function AddVote({ newGuardian, guardianList, removeGuardian, setSecretFunc }) {
     const [guardian, setguardian] = React.useState("");
+    const [secret, setsecret] = React.useState("");
     const [list, setlist] = React.useState([]);
 
     const onChangeEvent = (event) => {
@@ -13,6 +14,21 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
         setguardian(address);
     }
 
+    //onChangeSecret
+    const onChangeSecret = (event) => {
+        const secret = event.target.value;
+        setsecret(secret);
+    }
+
+    //set A NEW Secret.
+    const setSecretButton = (event) => {
+        setSecretFunc(event, secret).then(function (data) {
+            console.log(data);
+            alert("Secret seted");
+        });
+    }
+
+    //once render.
     useEffect(() => {
         guardianList().then(function (data) {
             setlist(data);
@@ -31,16 +47,23 @@ export default function AddVote({ newGuardian, guardianList, removeGuardian }) {
 
                             <form className="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
                                 <div className="col-12">
-
                                     <MDBCol size='12'>
                                         <MDBInput label='new guardian address' id='form2' type='text' onChange={onChangeEvent} value={guardian} />
                                     </MDBCol>
-
                                 </div>
-
                                 <div className="col-12">
                                     <button type="button" onClick={event => newGuardian(event, guardian)} className="btn btn-primary">Add</button>
                                 </div>
+
+                                <div className="col-12">
+                                    <MDBCol size='12'>
+                                        <MDBInput label='newSecret' type='text' onChange={onChangeSecret} value={secret} />
+                                    </MDBCol>
+                                </div>
+                                <div className="col-12">
+                                    <button type="button" onClick={event => setSecretButton(event)} className="btn btn-primary">set</button>
+                                </div>
+
                             </form>
 
                             <table className="table mb-3">

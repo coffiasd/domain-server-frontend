@@ -32,7 +32,7 @@ async function main() {
 
     //deplay recover contract
     const Recover = await hre.ethers.getContractFactory("Recover");
-    const recover = await Recover.deploy("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    const recover = await Recover.deploy("0x5FC8d32690cc91D4c39d9d3abcBD16989F875707");
     await recover.deployed();
     console.log("recover address:", recover.address);
 
